@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http'
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http'
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -8,6 +8,7 @@ import { StocksComponent } from './Components/stocks/stocks.component';
 import { OrdersComponent } from './Components/orders/orders.component';
 import { OrdersCreationComponent } from './Components/orders/orders-creation/orders-creation.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SpinnerLoader } from './interceptors/spinner-loader';
 
 import {MatTableModule} from '@angular/material/table';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -21,6 +22,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import {MatSelectModule} from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
+import { OrderStockDetailsComponent } from './Components/orders/order-stock-details/order-stock-details.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -28,7 +32,8 @@ import { MatOptionModule } from '@angular/material/core';
     StocksComponent,
     OrdersComponent,
     OrdersCreationComponent,
-    NavbarComponent
+    NavbarComponent,
+    OrderStockDetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -46,9 +51,11 @@ import { MatOptionModule } from '@angular/material/core';
     BrowserAnimationsModule,
     FlexLayoutModule,
     MatSelectModule,
-    MatOptionModule
+    MatOptionModule,
+    NgxSpinnerModule,
+    ToastrModule.forRoot(),
   ],
-  providers: [],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: SpinnerLoader, multi: true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

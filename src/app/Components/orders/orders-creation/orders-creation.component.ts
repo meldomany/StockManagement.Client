@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Stock } from 'src/app/models/stock.model';
 import { OrderService } from 'src/app/services/order.service';
 import { StockService } from 'src/app/services/stock.service';
@@ -22,18 +23,18 @@ export class OrdersCreationComponent implements OnInit {
 }) as FormGroup;
 
 
-  constructor(private orderService: OrderService, private stockService: StockService, private fb: FormBuilder, private route: ActivatedRoute) { }
+  constructor(private orderService: OrderService, 
+    private stockService: StockService, 
+    private fb: FormBuilder, 
+    private route: ActivatedRoute,
+    private toastr: ToastrService) { }
 
   ngOnInit(): void {
-    this.getStocks();
-  }
-
-  getStocks(){
-    this.stockService.getStocks().subscribe(res => {
+    this.stockService.stocks$.subscribe(res => {
       if(res.length > 0){
         this.stocks = res;
       }
-    })
+    });
   }
 
   addNewOrder(){
@@ -42,10 +43,8 @@ export class OrdersCreationComponent implements OnInit {
       orderFormData.append(formControlName,  this.orderForm.get(formControlName)?.value);    
     });
 
-    this.orderService.createOrder(orderFormData).subscribe((res) => {
-      if(res){
-        console.log("created");
-      }
-    })
+    this.orderService.createOrder(orderFormData).subscribe(() => {
+      this.toastr.success("Order added successfully");
+    });
   }
 }

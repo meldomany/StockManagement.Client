@@ -28,7 +28,6 @@ export class OrderService {
     return this.http.post<Order>(this.stockBaseUrl + "CreateOrder", orderForm).pipe(
        map((response) => {
         this.orderAdded.next(response);
-        return response;
       })
     );
  }

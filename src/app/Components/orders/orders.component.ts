@@ -4,7 +4,9 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs';
 import { Order } from 'src/app/models/order.model';
+import { Stock } from 'src/app/models/stock.model';
 import { OrderService } from 'src/app/services/order.service';
 import { StockService } from 'src/app/services/stock.service';
 
@@ -16,6 +18,8 @@ import { StockService } from 'src/app/services/stock.service';
 export class OrdersComponent implements OnInit {
 
   stockID: number = 0;
+  stockDetails!: Stock;
+
   stocksAvailable: boolean = false;
   
   displayedColumns: string[] = ['stockID', 'price', 'quantity', 'personName', 'stock', 'controls'];
@@ -32,25 +36,35 @@ export class OrdersComponent implements OnInit {
       }
     })
     this.selectOrders();
+    
+    this.orderService.currentOrder$.subscribe(response => {
+      if(response.stockID == this.stockID || this.stockID == undefined){
+        this.dataSource.data.push(response);
+        this.updateTableData();
+      }
+    })
   }
 
   selectOrders(){
-    this.stockID = Number(this.route.snapshot.queryParamMap.get('stockID'));
-    (this.stockID > 0) ? this.getOrdersByStockID(this.stockID) : this.getOrders();
 
-    this.orderService.currentOrder$.subscribe(response => {
-      if(response.stockID == this.stockID || this.stockID == 0){
-        this.dataSource.data.push(response);
-        this.dataSource._updateChangeSubscription();
-      }
-    })
+    this.route.queryParams.subscribe(params => {
+      this.stockID = params['stockID']; 
+      (params['stockID'] > 0) ? this.getOrdersByStockID(this.stockID) : this.getOrders();
+    });
 
+    // this.stockID = Number(this.route.snapshot.queryParamMap.get('stockID'));
+    // if(this.stockID > 0){
+    //   this.getOrdersByStockID(this.stockID)
+    // }else {
+    //   this.getOrders(); 
+    // }
   }
 
   getOrders(){
     this.orderService.getOrders().subscribe(res => {
       if(res.length > 0){
-        this.updateTableData(res);
+        this.dataSource = new MatTableDataSource(res);
+        this.updateTableData();
       }
     })
   }
@@ -58,14 +72,13 @@ export class OrdersComponent implements OnInit {
   getOrdersByStockID(stockID: number){
     this.orderService.getOrdersByStockID(stockID).subscribe(res => {
       if(res.length > 0){
-        this.updateTableData(res);
+        this.dataSource = new MatTableDataSource(res);
+        this.updateTableData();
       }
     })
   }
 
-
-  updateTableData(orders: Order[]){
-    this.dataSource = new MatTableDataSource(orders);
+  updateTableData(){
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }

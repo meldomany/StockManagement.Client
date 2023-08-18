@@ -1,5 +1,5 @@
 {
-  "name": "stock-management.client",
+  "name": "stock-management-client",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -21,8 +21,9 @@
     "@angular/platform-browser": "^14.2.0",
     "@angular/platform-browser-dynamic": "^14.2.0",
     "@angular/router": "^14.2.0",
-    "@aspnet/signalr": "^1.0.27",
     "@microsoft/signalr": "^7.0.10",
+    "ngx-spinner": "^12.0.0",
+    "ngx-toastr": "^13.0.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

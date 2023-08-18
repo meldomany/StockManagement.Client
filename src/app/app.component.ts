@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { SignalrService } from './services/signalr.service';
 import { HttpClient } from '@angular/common/http';
+import { StockService } from './services/stock.service';
 
 @Component({
   selector: 'app-root',
@@ -10,18 +10,9 @@ import { HttpClient } from '@angular/common/http';
 export class AppComponent {
   title = 'StockManagement.Client';
 
-  constructor(public signalRService: SignalrService, private http: HttpClient) { }
+  constructor(private stockService: StockService, private http: HttpClient) { }
 
   ngOnInit() {
-    this.signalRService.startConnection();
-    this.signalRService.addTransferStockDataListener();   
-    this.startHttpRequest();
-  }
-  
-  private startHttpRequest = () => {
-    this.http.get('https://localhost:7047/api/Stocks/GetStocks')
-      .subscribe(res => {
-        console.log(res);
-      })
+    this.stockService.startConnection();
   }
 }
