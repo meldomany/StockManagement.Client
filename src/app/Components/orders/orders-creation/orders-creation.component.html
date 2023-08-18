@@ -1,0 +1,25 @@
+<form [formGroup]="orderForm" (ngSubmit)="orderForm.valid && addNewOrder()">
+    <div fxLayout="row wrap" fxLayoutAlign="space-between">
+        <mat-form-field fxFlex="22%" appearance="fill">
+            <mat-label>Price</mat-label>
+            <input formControlName="price" type="number" matInput placeholder="Ex. 50">
+        </mat-form-field>
+        <mat-form-field fxFlex="22%" appearance="fill">
+            <mat-label>Quantity</mat-label>
+            <input formControlName="quantity" type="number" matInput placeholder="Ex. 5">
+        </mat-form-field>
+        <mat-form-field fxFlex="22%" appearance="fill">
+            <mat-label>Person Name</mat-label>
+            <input formControlName="personName" type="text" matInput placeholder="Ex. Person name">
+        </mat-form-field>
+        <mat-form-field fxFlex="22%" appearance="fill">
+            <mat-label>Stock</mat-label>
+            <mat-select formControlName="stockID">
+              <mat-option *ngFor="let stock of stocks" [value]="stock.id">{{ stock.name }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <div fxLayout="column" fxFlex="10%">
+            <button mat-flat-button color="primary" [disabled]="orderForm.invalid" style="height: 50px;">Add new order</button>
+        </div>
+    </div>
+</form>
